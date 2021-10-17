@@ -1,3 +1,5 @@
+# https://projecteuler.net/problem=4
+
 maxNum = 0
 for i in range(900, 1000):
     for j in range(900, 1000):

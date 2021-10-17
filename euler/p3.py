@@ -1,3 +1,5 @@
+# https://projecteuler.net/problem=3
+
 from collections import defaultdict
 from math import sqrt
 number = 600851475143

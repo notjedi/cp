@@ -1,9 +1,11 @@
+# https://projecteuler.net/problem=1
+
 def ap(limit: int, n: int) -> int:
     # n = no of terms = (limit/n)
     # say limit is 1000 and n is 3 and int(1000/3) = 333
     # so there are 333 terms b/w 3 and 1000 that are
     # divisible by 3 if i was to include 0 to the AP then i should
-    # a 1 to the number of terms because i'm adding a 0 to the start
+    # add 1 to the number of terms because i'm adding a 0 to the start
     # formula for AP when the last term is not known =>
     # S(n) = n/2 ((2*a) + (n-1)*d) where n is number of terms,
     # a is the first term and d is the common difference

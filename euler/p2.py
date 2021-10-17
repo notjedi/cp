@@ -1,3 +1,5 @@
+# https://projecteuler.net/problem=2
+
 # prev, cur = 0, 1
 # total = 0
 # while True:
