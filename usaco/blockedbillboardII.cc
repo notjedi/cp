@@ -31,6 +31,7 @@ int solve(Rect a, Rect b) {
   return (x * y);
 }
 
+/* http : // www.usaco.org/index.php?page=viewproblem2&cpid=783 */
 int main() {
 
   /* tarp needs to be a rectangle */
