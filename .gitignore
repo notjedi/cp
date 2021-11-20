@@ -1,4 +1,5 @@
 *.out
+*.in
 __pycache__
 
 aoc/2017/getInput
