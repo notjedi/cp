@@ -2,10 +2,8 @@
 *.in
 __pycache__
 
-aoc/2017/getInput
-# aoc/2018/getInput
-# aoc/2019/getInput
-aoc/2020/getInput
-
+get-input
+getInput
 sample
+samp
 input
