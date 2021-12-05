@@ -24,7 +24,7 @@ def sumBoard(board, mask):
 def solve(nums, boards):
     mask = [[0 for _ in range(25)] for _ in range(len(boards))]
     boardWin = [0 for _ in range(len(boards))]
-    part1, part2= None, None
+    part1, part2, done = None, None, False
 
     for num in nums:
         for i, board in enumerate(boards):
@@ -32,15 +32,21 @@ def solve(nums, boards):
                 continue
             mask[i][board.index(num)] = 1
             if (checkBoard(mask[i])):
-                boardSum = sumBoard(board, mask[i])
+                boardWin[i] = 1
                 if (part1 is None):
+                    boardSum = sumBoard(board, mask[i])
                     part1 = num * boardSum
-                if (boardWin[i] == 0):
-                    boardWin[i] = 1
+                # eventually all boards will win
+                if all(boardWin):
+                    done = True
+                    boardSum = sumBoard(board, mask[i])
                     part2 = num * boardSum
+                    break
+        if done:
+            break
 
-    print(part1)
-    print(part2)
+    print(f"Part 1: {part1}")
+    print(f"Part 2: {part2}")
 
 
 if __name__ == '__main__':
