@@ -1,22 +1,26 @@
-from collections import Counter, defaultdict
-
 def progression(x):
     return (x * (x+1)) // 2
 
 def solve(pos):
 
+    pos = sorted(pos)
     minPos = min(pos)
     maxPos = max(pos)
-    p1 = defaultdict(int)
-    p2 = defaultdict(int)
+    mid = len(pos) // 2
+    p1, p2 = 0, 1e9
+
+    for x in pos:
+        p1 += abs(x - pos[mid])
 
     for i in range(minPos, maxPos + 1):
+        score = 0
         for k in pos:
-            p1[i] += abs(i - k)
-            p2[i] += progression(abs(i - k))
+            score += progression(abs(i - k))
+        if score < p2:
+            p2 = score
 
-    print(min(p1.values()))
-    print(min(p2.values()))
+    print(p1)
+    print(p2)
 
 
 if __name__ == "__main__":
