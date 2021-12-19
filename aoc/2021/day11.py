@@ -23,7 +23,6 @@ def flash(i, j):
                 if limits[newX][newY] > 9:
                     flash(newX, newY)
 
-
 def solve():
 
     timestep = 0
@@ -41,10 +40,7 @@ def solve():
             break
         elif timestep == 100:
             print(count)
-
         reset()
-
-
 
 if __name__ == "__main__":
     file = open("aoc/2021/inputs/day11", "r")
