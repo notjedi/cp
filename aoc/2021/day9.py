@@ -2,26 +2,17 @@ import numpy as np
 
 def expand(i, j):
 
-    if i < 0 or i >= rows:
-        return 0
-    elif j < 0 or j >= cols:
-        return 0
-    elif lines[i][j] == 9:
-        return 0
-
     count = 0
     pts[i][j] = True
     for dx in [i+1, i-1]:
-        if dx >= 0 and dx < rows and (lines[i][j] < lines[dx][j]) and lines[dx][j] != 9 and pts[dx][j] == 0:
+        if 0 <= dx < rows and (lines[i][j] < lines[dx][j]) and lines[dx][j] != 9 and pts[dx][j] == 0:
             pts[dx][j] = True
-            count += 1
-            count += expand(dx, j)
+            count += (1 + expand(dx, j))
 
     for dy in [j+1, j-1]:
-        if dy >= 0 and dy < cols and (lines[i][j] < lines[i][dy]) and lines[i][dy] != 9 and pts[i][dy] == 0:
+        if 0 <= dy < cols and (lines[i][j] < lines[i][dy]) and lines[i][dy] != 9 and pts[i][dy] == 0:
             pts[i][dy] = True
-            count += 1
-            count += expand(i, dy)
+            count += (1 + expand(i, dy))
 
     return count
 
@@ -29,11 +20,11 @@ def expand(i, j):
 def check_adj(lines, i, j):
     ok = True
     for dx in [i+1, i-1]:
-        if dx >= 0 and dx < rows and lines[dx][j] <= lines[i][j]:
+        if 0 <= dx < rows and lines[dx][j] <= lines[i][j]:
             ok = False
 
     for dy in [j+1, j-1]:
-        if dy >= 0 and dy < cols and lines[i][dy] <= lines[i][j]:
+        if 0 <= dy < cols and lines[i][dy] <= lines[i][j]:
             ok = False
 
     return ok
