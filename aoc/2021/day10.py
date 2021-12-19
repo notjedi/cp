@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-
 def validate(line):
     stack = []
     for char in line:
@@ -10,31 +7,30 @@ def validate(line):
             if len(stack) > 0 and char == pairs[stack[-1]]:
                 stack.pop()
             else:
-                return [], points[char]
+                return [], corruptPoints[char]
 
     return stack, 0
 
 
 def solve():
     incomplete = []
-    points = 0
+    part1 = 0
 
     for line in lines:
         stack, val = validate(line)
         if val == 0:
             incomplete.append(stack)
-        points += val
+        part1 += val
 
     scores = []
     for stack in incomplete:
         score = 0
         for char in stack[::-1]:
-            score = (score * 5) + stackScore[char]
-
+            score = (score * 5) + incompletePoints[char]
         scores.append(score)
 
     scores.sort()
-    print(points)
+    print(part1)
     print(scores[len(scores) // 2])
 
 if __name__ == "__main__":
@@ -42,8 +38,8 @@ if __name__ == "__main__":
     # file = open("aoc/2021/inputs/samp", "r")
     lines  = [line.strip() for line in file.read().strip().split('\n')]
 
-    points = {')': 3, ']': 57, '}': 1197, '>': 25137 }
-    stackScore = {'(': 1, '[': 2, '{': 3, '<': 4 }
     pairs = {'(': ')', '[': ']', '<': '>', '{': '}' }
+    corruptPoints = {')': 3, ']': 57, '}': 1197, '>': 25137 }
+    incompletePoints = {'(': 1, '[': 2, '{': 3, '<': 4 }
 
     solve()
