@@ -10,9 +10,9 @@ def fold(points, ins):
             newPoints.add(point)
             continue
 
+        # thankfully all point[dim] is not > 2*val
         newPt = list(point)
-        newDimVal = point[dim] % val
-        newPt[dim] = val - (val if newDimVal == 0 else newDimVal)
+        newPt[dim] = val - (point[dim] - val)
         newPoints.add(tuple(newPt))
 
     return newPoints
@@ -35,12 +35,11 @@ def printPts(points):
     for point in points:
         code[point[1]][point[0]] = '#'
 
-    for i, line in enumerate(code):
+    for line in code:
         print(*line)
 
 if __name__ == "__main__":
     file = open("inputs/day13", "r")
-    # file = open("inputs/samp", "r")
     temp, instructions = file.read().strip().split('\n\n')
     instructions = instructions.split('\n')
     points = set()
