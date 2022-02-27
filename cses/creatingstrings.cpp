@@ -1,10 +1,10 @@
+#include <algorithm>
 #include <cstdint>
-#include<iostream>
-#include<algorithm>
-#include<vector>
-#include<string>
-#include<set>
-#include<map>
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
 
 using namespace std;
 using ll = int64_t;
@@ -15,11 +15,11 @@ ll findFactorial(int n) {
 
     if (n == 0 || n == 1)
         return 1;
-    if (DP[n-1] > 1)
-        return DP[n-1];
+    if (DP[n - 1] > 1)
+        return DP[n - 1];
 
-    ll ans = n * findFactorial(n-1);
-    DP[n-1] = ans;
+    ll ans = n * findFactorial(n - 1);
+    DP[n - 1] = ans;
     return ans;
 }
 
@@ -32,23 +32,22 @@ int main() {
     sort(word.begin(), word.end());
     DP = vector<ll>(word.length(), -1);
 
-    for (char c: word)
+    for (char c : word)
         noOfLetters[c]++;
-        
+
     ll total = findFactorial(word.length());
 
-    for (auto c: noOfLetters) {
-       
+    for (auto c : noOfLetters) {
+
         if (c.second == 1)
             continue;
-        total /= DP[c.second-1];
+        total /= DP[c.second - 1];
     }
 
     cout << total << endl;
-    do{
+    do {
         cout << word << endl;
     } while (next_permutation(word.begin(), word.end()));
-
 
     return 0;
 }
