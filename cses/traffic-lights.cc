@@ -3,51 +3,36 @@
 using namespace std;
 using ll = long long;
 
+/* https://usaco.guide/problems/cses-1163-traffic-lights/solution */
 int main() {
+
+    // this actually helped this time, lol.
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+
     ll l, n, temp;
     cin >> l >> n;
-    ll start = 0, end = l, max_l = 0;
 
+    multiset<ll> dist;
     set<ll> pos;
+    dist.insert(l);
     pos.insert(0);
-    pos.insert(n);
+    pos.insert(l);
 
-    for (int i = 0; i < n; i++) {
+    for (ll i = 0; i < n; i++) {
         cin >> temp;
+
+        auto up_bound = pos.upper_bound(temp);
+        auto low_bound = up_bound;
+        --low_bound;
+
+        dist.erase(dist.find(*up_bound - *low_bound));
+        dist.insert(temp - *low_bound);
+        dist.insert(*up_bound - temp);
         pos.insert(temp);
 
-        // left of start
-        auto low_start = pos.lower_bound(start);
-        if (low_start != pos.end())
-            max_l = max(start - *low_start, max_l);
-
-        // left of end
-        auto low_end = pos.lower_bound(end);
-        if (low_end != pos.end())
-            max_l = max(end - *low_end, max_l);
-
-        // right of start
-        auto up_start = pos.upper_bound(start);
-        if (low_end != pos.end())
-            max_l = max(*up_start - start, max_l);
-
-        // right of end
-        auto up_end = pos.upper_bound(end);
-        if (low_end != pos.end())
-            max_l = max(*up_start - end, max_l);
-
-        if (temp > start) {
-            if (temp - start > end - temp) {
-                end = temp;
-                max_l = temp - start;
-            } else {
-                start = temp;
-                max_l = end - temp;
-            }
-        }
-        // cout << temp << " " << temp - start << " " << end - temp << " " <<
-        // max_l
-        //      << endl;
-        cout << max_l << " ";
+        cout << *--dist.end() << " ";
     }
+
+    return 0;
 }
