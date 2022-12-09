@@ -6,6 +6,7 @@ struct ParsedInput {
     instructions: Vec<(i32, usize, usize)>,
 }
 
+// from: https://stackoverflow.com/questions/64498617/how-to-transpose-a-vector-of-vectors-in-rust
 fn transpose(v: Vec<Vec<char>>) -> Vec<Vec<char>> {
     assert!(!v.is_empty());
     let len = v[0].len();
