@@ -26,3 +26,5 @@ Cargo.lock
 *.pdb
 
 *.out
+
+sample.txt
