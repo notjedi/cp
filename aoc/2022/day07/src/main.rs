@@ -1,5 +1,8 @@
 use std::io::{self, Read};
 
+const TAB: u32 = 2;
+const HYPHEN_WIDTH: usize = 2;
+
 #[derive(Debug, Clone)]
 enum LineType {
     Command(Command),
@@ -75,12 +78,35 @@ fn parse(input: String) -> Vec<LineType> {
         .collect::<Vec<_>>();
 }
 
+// TODO: add new/from method/trait to FsEntry
 fn make_fsentry(path: String, size: usize) -> FsEntry {
     FsEntry {
         path,
         size,
         children: Vec::new(),
-        // children: vec![],
+    }
+}
+
+// TODO: make this func part of FsEntry struct
+fn pretty_print(node: &FsEntry, level: u32) {
+    println!(
+        "{:>spaces$} (dir)",
+        format!("- {}", node.path),
+        spaces = (level * TAB) as usize + node.path.len() + HYPHEN_WIDTH
+    );
+    let tab_length = ((level + 1) * TAB) as usize;
+
+    for child in node.children.as_slice() {
+        if child.is_dir() {
+            pretty_print(child, level + 1);
+        } else {
+            println!(
+                "{:>spaces$} (file, {size})",
+                format!("- {}", child.path),
+                spaces = tab_length + child.path.len() + HYPHEN_WIDTH,
+                size = child.size,
+            );
+        }
     }
 }
 
@@ -155,5 +181,6 @@ fn main() {
     let root = build_index(entries);
 
     part1(root.clone());
-    part2(root);
+    part2(root.clone());
+    pretty_print(&root, 0);
 }
