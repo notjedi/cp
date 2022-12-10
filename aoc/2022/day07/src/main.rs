@@ -22,7 +22,6 @@ enum Entry {
 }
 
 #[derive(Debug, Clone)]
-#[allow(dead_code)]
 struct FsEntry {
     path: String,
     size: usize,
@@ -30,6 +29,14 @@ struct FsEntry {
 }
 
 impl FsEntry {
+    fn new(path: String, size: usize) -> Self {
+        Self {
+            path,
+            size,
+            children: vec![],
+        }
+    }
+
     fn is_dir(&self) -> bool {
         !self.children.is_empty()
     }
@@ -56,6 +63,38 @@ impl FsEntry {
                 .map(|child| child.size())
                 .sum::<usize>()
     }
+
+    fn pretty_print(&self, level: u32) {
+        println!(
+            "{:>spaces$} (dir)",
+            format!("- {}", self.path),
+            spaces = (level * TAB) as usize + self.path.len() + HYPHEN_WIDTH
+        );
+        let tab_length = ((level + 1) * TAB) as usize;
+
+        for child in self.children.as_slice() {
+            if child.is_dir() {
+                child.pretty_print(level + 1);
+            } else {
+                println!(
+                    "{:>spaces$} (file, {size})",
+                    format!("- {}", child.path),
+                    spaces = tab_length + child.path.len() + HYPHEN_WIDTH,
+                    size = child.size,
+                );
+            }
+        }
+    }
+}
+
+impl Default for FsEntry {
+    fn default() -> Self {
+        Self {
+            path: "".into(),
+            size: 0,
+            children: Vec::new(),
+        }
+    }
 }
 
 fn parse(input: String) -> Vec<LineType> {
@@ -78,42 +117,10 @@ fn parse(input: String) -> Vec<LineType> {
         .collect::<Vec<_>>();
 }
 
-// TODO: add new/from method/trait to FsEntry
-fn make_fsentry(path: String, size: usize) -> FsEntry {
-    FsEntry {
-        path,
-        size,
-        children: Vec::new(),
-    }
-}
-
-// TODO: make this func part of FsEntry struct
-fn pretty_print(node: &FsEntry, level: u32) {
-    println!(
-        "{:>spaces$} (dir)",
-        format!("- {}", node.path),
-        spaces = (level * TAB) as usize + node.path.len() + HYPHEN_WIDTH
-    );
-    let tab_length = ((level + 1) * TAB) as usize;
-
-    for child in node.children.as_slice() {
-        if child.is_dir() {
-            pretty_print(child, level + 1);
-        } else {
-            println!(
-                "{:>spaces$} (file, {size})",
-                format!("- {}", child.path),
-                spaces = tab_length + child.path.len() + HYPHEN_WIDTH,
-                size = child.size,
-            );
-        }
-    }
-}
-
 fn build_index(entries: Vec<LineType>) -> FsEntry {
     let mut stack: Vec<FsEntry> = vec![];
     // input guarantees that this will always be replaced by the root dir at the `/` match arm
-    let mut node = make_fsentry("".into(), 0);
+    let mut node = FsEntry::default();
 
     for line_type in entries {
         match line_type {
@@ -121,7 +128,7 @@ fn build_index(entries: Vec<LineType>) -> FsEntry {
                 Command::Ls => continue,
                 Command::Cd(path) => match path.as_str() {
                     "/" => {
-                        node = make_fsentry(path, 0);
+                        node = FsEntry::new(path, 0);
                     }
                     ".." => {
                         let child_dir = node;
@@ -130,12 +137,12 @@ fn build_index(entries: Vec<LineType>) -> FsEntry {
                     }
                     _ => {
                         stack.push(node);
-                        node = make_fsentry(path, 0);
+                        node = FsEntry::new(path, 0);
                     }
                 },
             },
             LineType::Entry(entry) => match entry {
-                Entry::File(path, size) => node.children.push(make_fsentry(path, size)),
+                Entry::File(path, size) => node.children.push(FsEntry::new(path, size)),
                 Entry::Dir(_) => continue,
             },
         }
@@ -162,6 +169,10 @@ fn part1(root: FsEntry) {
 fn part2(root: FsEntry) {
     let min_needed = 30000000;
     let need_to_free = root.size() - min_needed;
+    assert!(
+        root.size() > min_needed,
+        "Invalid input, we already have enough space"
+    );
 
     let mut candidates = root
         .get_dirs()
@@ -180,7 +191,7 @@ fn main() {
     let entries = parse(input);
     let root = build_index(entries);
 
+    root.pretty_print(0);
     part1(root.clone());
-    part2(root.clone());
-    pretty_print(&root, 0);
+    part2(root);
 }
