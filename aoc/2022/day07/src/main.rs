@@ -167,10 +167,13 @@ fn part1(root: FsEntry) {
 }
 
 fn part2(root: FsEntry) {
-    let min_needed = 30000000;
-    let need_to_free = root.size() - min_needed;
+    const MIN_NEEDED: usize = 30000000;
+    const TOTAL_SPACE: usize = 70000000;
+    let total_used = root.size();
+    let unused_space = TOTAL_SPACE - total_used;
+    let need_to_free = MIN_NEEDED - unused_space;
     assert!(
-        root.size() > min_needed,
+        MIN_NEEDED > unused_space,
         "Invalid input, we already have enough space"
     );
 
